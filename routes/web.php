@@ -24,6 +24,6 @@ Route::middleware([
     })->name('dashboard');
 });
 
+Route::post('/guess-movie', [MovieController::class, 'guessMovie']);
 
-// Route::get('/{id}', [MovieController::class, 'show'])->name('movie.show');
 Route::get('/{id}', [MovieController::class, 'show'])->where('id', '[0-9]+');
