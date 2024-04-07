@@ -22,5 +22,8 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('adminadmin'),
             'is_admin' => true,
         ]);
+        $this->call([
+            MovieSeeder::class,
+        ]);
     }
 }
