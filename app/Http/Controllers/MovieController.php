@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Http;
 
 
 
@@ -16,7 +17,8 @@ class MovieController extends Controller
 {
     public function show($id)
     {
-        $movie = Movie::findOrFail($id);
+        // $movie = Movie::findOrFail($id);
+        $movie = $this->fetchMovies();
         return Inertia::render('Welcome', compact('movie'));
     }
 
@@ -44,5 +46,25 @@ class MovieController extends Controller
     public function nextCitation()
     {
 
+    }
+
+    private function fetchMovies()
+    {
+        $apiKey = '45ed43039702d6289093272380b830cc';
+        $url = 'https://api.themoviedb.org/3/movie/popular';
+
+        $response = Http::get($url, [
+            'api_key' => $apiKey,
+            // You can add more parameters if needed
+        ]);
+
+        if ($response->successful()) {
+             $movies = $response->json()['results'];
+            $movieNames = array_column($movies, 'title');
+            return $movieNames;
+        } else {
+            // Handle unsuccessful response
+            abort(500, 'Failed to fetch movies from TMDB API');
+        }
     }
 }
